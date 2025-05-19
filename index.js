@@ -1,12 +1,8 @@
-// This file contains the JavaScript logic for the Simon game.
-
 //lines 3-4-5-6 are part of requirements 21-22-23-24-25
-
 var level = 0;          // Step 2: Start level at 0
 var started = false;    // Step 1 + Hint 1: Track if game started
 var gamePattern = [];   // Move this here — so it's not re-created every time
 var buttonColours = ["red", "blue", "green", "yellow"]; // Move this here too
-
 
 //1. Inside game.js create a new function called nextSequence()
 //2. Inside the new function generate a new random number between 0 and 3, and store it in a variable called randomNumber
@@ -28,15 +24,10 @@ function nextSequence() {
     gamePattern.push(randomChosenColour);
     console.log(gamePattern);
 
-  // Flash + sound. Added to satisfy requirements 21-25 
-  $("#" + randomChosenColour).fadeOut(100).fadeIn(100);
-  playSound(randomChosenColour);
+    // Flash + sound. Added to satisfy requirements 21-25 
+    $("#" + randomChosenColour).fadeOut(100).fadeIn(100);
+    playSound(randomChosenColour);
 }
-
-
-
-
-
 
 
 
@@ -55,27 +46,17 @@ function nextSequence() {
     //audio.play();
 
     //playSound(randomChosenColour); // added for SECTION REQUIREMENTS 14-15-16 below
-    
-    
-    
-    
-
-
-
-
-
-
-
 
 //10. Use jQuery to detect when any of the buttons are clicked and trigger a handler function.
 //11. Inside the handler, create a new variable called userChosenColour to store the id of the button that got clicked.
 //--> So if the Green button was clicked, userChosenColour will equal its id which is "green".
 //12. At the top of the game.js file, create a new empty array with the name userClickedPattern.
 var userClickedPattern = [];
+
 //13. Add the contents of the variable userChosenColour created in step 2 to the end of this new userClickedPattern
 //At this stage, if you log the userClickedPattern you should be able to build up an array in the console by clicking on different buttons.
 
-    $(".btn").click(function() { //$(.btn) is a jQuery selector that targets all HTML elements with the class btn.
+$(".btn").click(function() { //$(.btn) is a jQuery selector that targets all HTML elements with the class btn.
     
     // Step 2: Get the id of the clicked button
     var userChosenColour = $(this).attr("id");
@@ -94,17 +75,11 @@ var userClickedPattern = [];
     console.log(userClickedPattern);
 
     playSound(userChosenColour); // added for requirement 16 below
-    
+
+    animatePress(userChosenColour); // Visual feedback - requirement 17-20
+
     checkAnswer(userClickedPattern.length - 1); // Requirement 27 way way down
 });
-
-
-
-
-
-
-
-
 
 //14. Create a new function called playSound() that takes a single input parameter called name.
 //15. Take the code we used to play sound in the nextSequence() function and move it to playSound().
@@ -114,12 +89,6 @@ function playSound(name) {
     var audio = new Audio("sounds/" + name + ".mp3");
     audio.play();
 }
-
-
-
-
-
-
 
 
 //17. Create a new function called animatePress(), it should take a single input parameter called currentColour.
@@ -132,13 +101,8 @@ function animatePress(currentColour) {
 
   setTimeout(function() {
     $("#" + currentColour).removeClass("pressed");
-  }, 100);// this is to make it stop after 1s
+  }, 300); // Changed from 100ms to 300ms for better visibility
 }
-
-
-
-
-
 
 
 
@@ -150,21 +114,17 @@ function animatePress(currentColour) {
 //25. Inside nextSequence(), update the h1 with this change in the value of level.
 
 
-//Hint 1. You'll need a variable called started to toggle to true once the game starts and if it's true, then further key presses should not trigger nextSequence().
-//Hint 3. The h1 has a unique id of level-title which you can target with jQuery.
-//Hint 5.  You'll need to use jQuery again to change the h1 by targeting the id: level-title.
-
-
-//detect first keypress
-$(document).keydown(function() {// here, $(document) will search the entire html file. keydown means Once a keytroke is clicked, the code will automatically call the function)(), which will mark the game as started and mark down the level as 1
+//detect first interaction
+function startGame() {
   if (!started) {
     $("#level-title").text("Level " + level);  // Step 3
     nextSequence();                            // Step 1
     started = true;                            // Mark game as started
   }
-});
+}
 
-
+$(document).keydown(startGame); // Desktop support
+$(document).on("touchstart click", startGame); // Mobile and tablet support
 
 
 
@@ -180,41 +140,6 @@ $(document).keydown(function() {// here, $(document) will search the entire html
 //29. If the user got the most recent answer right in step 3, then check that they have finished their sequence with another if statement.
 //30. Call nextSequence() after a 1000 millisecond delay.
 //31. Once nextSequence() is triggered, reset the userClickedPattern to an empty array ready for the next level.
-
-
-//create the checkAnswer function():
-
-function checkAnswer(currentLevel) {
-  if (userClickedPattern[currentLevel] === gamePattern[currentLevel]) {
-    console.log("success");
-
-    // Step 4: check if full sequence completed
-    if (userClickedPattern.length === gamePattern.length) {
-      setTimeout(function () {
-        nextSequence();// Step 5: Call nextSequence() after a 1000 millisecond delay.
-      }, 1000);
-    }
-  } else {
-    console.log("wrong");
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//32. In the sounds folder, there is a sound called wrong.mp3, play this sound if the user got one of the answers wrong.
-//33. In the styles.css file, there is a class called "game-over", apply this class to the body of the website when the user gets one of the answers wrong and then remove it after 200 milliseconds.
-//34. Change the h1 title to say "Game Over, Press Any Key to Restart" if the user got the answer wrong.
 
 function checkAnswer(currentLevel) {
   if (userClickedPattern[currentLevel] === gamePattern[currentLevel]) {
@@ -240,21 +165,12 @@ function checkAnswer(currentLevel) {
     }, 200);
 
     // Step 34: Change h1 title
-    $("#level-title").text("Game Over, Press Any Key to Restart");
+    $("#level-title").text("Game Over, Tap Anywhere to Restart");
 
-     // Step 36 down below
+    // Step 36 down below
     startOver();
   }
 }
-
-
-
-
-
-
-
-
-
 
 
 //35. Create a new function called startOver().
