@@ -1,4 +1,5 @@
 # Simon Game
+link to game: https://husse1nberg.github.io/simon-game/
 
 ## Overview
 The Simon Game is a classic memory game where players must repeat a sequence of colors and sounds. The game challenges players to remember increasingly longer sequences of lights and sounds.
